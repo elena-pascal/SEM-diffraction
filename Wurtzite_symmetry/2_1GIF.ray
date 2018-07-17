@@ -1,0 +1,140 @@
+/* point group representations using Rayshade 4.0
+   preface file, contains color and object definitions
+   for all symmetry elements
+   Author: M. De Graef
+   Date:   10/26/1998
+*/
+
+surface mirror        /* mirrored (silver) surface */
+        ambient 0.14 0.14 0.14
+        diffuse 0.01 0.01 0.01
+        specular .8 .8 .8
+        specpow 80
+        reflect 1.
+
+surface blumirror     /* orange surface for object*/
+        ambient 0.1 0.1 0.1
+        diffuse 0.1 0.01 0.01
+        specular 0.99 0.55 0.35
+        specpow 20
+        reflect .6
+
+surface bluflat       /* blue surface */
+        ambient 0.04 0.06 0.22
+        diffuse 0.99 0.55 0.35
+        specular .4 .4 .4
+        specpow 20
+        reflect 0.2
+
+surface orangeflat       /* orange surface */
+        ambient 0.01 0.01 0.01
+        diffuse 0.99 0.55 0.35
+        specular 0.4 0.4 0.4
+        specpow 20
+        reflect 0.2
+
+surface white
+        ambient 0.06 0.06 0.06
+        diffuse 0.50 0.50 0.47
+        specular 0.7 0.7 0.7
+        specpow 38
+        reflect 0.5
+
+
+surface yellow
+        ambient 0.06 0.06 0.06
+        diffuse 1. 1. 0.75
+        specular 0.7 0.7 0.7
+        specpow 38
+        reflect 0.5
+
+
+name line
+list
+	cylinder blumirror 0.01 0.0 0.0 0.3  0.9 0.8 0.3
+end
+
+
+name refaxis
+list
+	cylinder mirror 0.01 0.0 0.0 -1.4  0.0 0.0 1.8
+end
+
+
+name point_group
+list
+	object refaxis
+end
+
+
+ /* Atom coordinates : 3.pos        */
+  
+name orbit
+ list
+ 	sphere blumirror  0.030   0.8881   0.8026   0.2091
+ 	sphere blumirror  0.030   0.8903   0.8333   0.2189
+ 	sphere blumirror  0.030   0.8807   0.8533   0.2288
+ 	sphere blumirror  0.030   0.8649   0.8564   0.2386
+ 	sphere blumirror  0.030   0.8515   0.8435   0.2484
+ 	sphere blumirror  0.030   0.8476   0.8224   0.2582
+ 	sphere blumirror  0.030   0.8568   0.8041   0.2680
+ 	sphere blumirror  0.030   0.8768   0.7986   0.2779
+ 	sphere blumirror  0.030   0.9009   0.8105   0.2877
+ 	sphere blumirror  0.030   0.9207   0.8370   0.2975
+ 	sphere blumirror  0.030   0.9295   0.8692   0.3073
+ 	sphere blumirror  0.030   0.9253   0.8957   0.3171
+ 	sphere blumirror  0.030   0.9117   0.9076   0.3269
+ 	sphere blumirror  0.030   0.8960   0.9021   0.3368
+ 	sphere blumirror  0.030   0.8866   0.8838   0.3466
+ 	sphere blumirror  0.030   0.8892   0.8626   0.3564
+ 	sphere blumirror  0.030   0.9044   0.8498   0.3662
+ 	sphere blumirror  0.030   0.9275   0.8529   0.3760
+ 	sphere blumirror  0.030   0.9504   0.8729   0.3858
+ 	sphere blumirror  0.030   0.9653   0.9036   0.3957
+ end
+
+
+name two_orbit
+list 
+     object line
+     object orbit 
+end
+
+name two_one
+list 
+    object two_orbit
+    object two_orbit translate 0. 0. 1. rotate 0.0 0.0 1.0 120
+    object two_orbit translate 0. 0. -1. rotate 0.0 0.0 1.0 120
+end
+frames 12
+define length 11
+define spin (linear(0, 0, length , 180))
+
+/* point group representation using Rayshade 4.0
+   tail file (sets observation variables for movie)
+   Author: M. De Graef
+   Date:   9/6/1995
+   Modfied for larger movie: 10/14/98
+*/
+plane white 0 0 -10 0 0.1 1
+
+object point_group rotate 0 0 1  (spin) 
+object two_one rotate 0 0 1  (spin) 
+
+
+
+screen 2560 1920
+maxdepth 25 
+eyep 2.2 4.8 1.7
+lookp 0 0 0.2 
+up 0 0 1
+fov 50
+sample 8
+light 1.4 point -6 3 6
+light 0.5 extended 2.0 6  -4 1
+background 1. 1. 0.75
+shutter 0
+framelength 1.5
+starttime 0 
+
+/* end of tail file */
