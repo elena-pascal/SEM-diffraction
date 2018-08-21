@@ -1,0 +1,277 @@
+/* wurtzite unit cell as commonly shown and not respecting group symmetry
+   representations using Rayshade 4.0
+   Author: Elena Pascal
+   Date:   08/2018
+*/
+
+surface mirror        /* mirrored (silver) surface */
+        ambient 0.14 0.14 0.14
+        diffuse 0.01 0.01 0.01
+        specular .8 .8 .8
+        specpow 80
+        reflect 0.9
+
+surface glass        /* glass surface */
+        ambient 0.14 0.14 0.14
+        diffuse 0.01 0.01 0.01
+	transp 0.7
+	extinct 0.2
+	reflect 0.7
+
+
+surface orangemirror     /* orange surface for object*/
+        ambient 0.1 0. 0.
+        diffuse 0.1 0.0 0.0
+        specular 0.99 0.55 0.35
+        specpow 20
+        reflect .6
+
+surface blutintmirror     /* blue mirrored surface */
+        ambient 0.02 0.02 0.02
+        diffuse 0.01 0.01 0.0
+        specular 0.57 0.75 0.86
+        specpow 60
+        reflect 1.
+
+surface yellowtintmirror     /* yellow mirrored surface */
+        ambient 0.02 0.02 0.01
+        diffuse 0.01 0.01 0.01
+        specular 0.9 0.9 0.75
+        specpow 60
+        reflect 1
+
+surface bluflat       /* blue surface */
+        ambient 0.04 0.06 0.22
+        diffuse 0.99 0.55 0.35
+        specular .4 .4 .4
+        specpow 20
+        reflect 0.2
+
+surface orangeflat       /* orange surface */
+        ambient 0.01 0.01 0.01
+        diffuse 0.99 0.55 0.35
+        specular 0.4 0.4 0.4
+        specpow 20
+        reflect 0.2
+
+surface white
+        ambient 0.06 0.06 0.06
+        diffuse 0.50 0.50 0.47
+        specular 0.7 0.7 0.7
+        specpow 38
+        reflect 0.5
+
+
+surface yellow
+        ambient 0.06 0.06 0.06
+        diffuse 1. 1. 0.75
+        specular 0.7 0.7 0.7
+        specpow 38
+        reflect 0.5
+
+
+surface black
+        ambient 0.1 0.1 0.1
+        diffuse 0.15 0.15 0.15
+        specular 0.57 0.75 0.86
+        specpow 35
+        reflect 0.5
+
+
+
+
+
+name line_100
+list
+	cylinder black 0.011  0.0 0.0 0.7  0.9 0.0 0.7
+	cylinder black 0.011  0.0 0.0 -0.7  0.9 0.0 -0.7
+end
+
+
+name line_closehex
+list 
+	cylinder black 0.011  0.9 0.0 0.7  0.45 0.7794 0.7
+	cylinder black 0.011  0.9 0.0 -0.7  0.45 0.7794 -0.7
+end
+
+
+name unitcell
+list
+	object line_100
+	object line_100 rotate 0. 0. 1. 120
+
+	object line_closehex
+	object line_closehex rotate 0. 0. 1. 60
+
+	cylinder black 0.011 0.0 0. -0.7  0.0 0. 0.7 
+	cylinder black 0.011 0.9 0. -0.7  0.9 0. 0.7 
+	cylinder black 0.011 0.9 0. -0.7  0.9 0. 0.7 rotate 0. 0. 1. 60
+	cylinder black 0.011 0.9 0. -0.7  0.9 0. 0.7 rotate 0. 0. 1. 120
+end
+
+
+
+name Ga1
+list
+        sphere orangemirror  0.08   0.9  0.0   0.7
+end
+
+name Ga2
+list
+        sphere orangemirror  0.08   0.9  0.0   -0.7
+end
+
+
+
+
+name Ga3
+list
+	sphere orangemirror  0.08   0.45  0.259   0.0
+end
+
+
+name N1
+list
+	sphere blutintmirror  0.06   0.9  0.0   -0.175
+end
+
+name bond
+list
+	cylinder mirror 0.02   0.9 0.0 -0.7   0.9 0.0 -0.175
+end
+
+name bond2
+list
+	cylinder mirror 0.02   0.45 0.259 0.525   0.45 0.259 0.
+end
+
+
+name N1_wlines
+list
+	object N1
+	object bond
+end
+
+
+name N2
+list
+	sphere blutintmirror  0.06   0.45  0.259   0.525
+end
+
+
+name trivbond2
+list
+	cylinder mirror 0.02   0.0  0.0 -0.175  0.5 0.2887 0.
+end
+
+name linethreefold2
+list
+	object trivbond2
+	object trivbond2 translate -0.45 -0.259 0. rotate 0. 0. 1. 120 translate 0.45 0.259 0. 
+	object trivbond2 translate -0.45 -0.259 0. rotate 0. 0. 1. 240 translate 0.45 0.259 0.  
+end
+
+name trivbond1
+list
+	cylinder mirror 0.02   0.0  0.0  0.7    0.45  0.259   0.525
+end
+
+name linethreefold1
+list
+	object trivbond1
+	object trivbond1 translate -0.45 -0.259 0. rotate 0. 0. 1. 120 translate 0.45 0.259 0. 
+	object trivbond1 translate -0.45 -0.259 0. rotate 0. 0. 1. 240 translate 0.45 0.259 0.  
+end
+
+
+
+name N2_wlines
+list
+	object N2
+	object bond2
+	object linethreefold1
+	object linethreefold2
+end
+
+
+
+name tetrahedron
+list
+	triangle glass 0.0 0.0 -0.175  0.9 0.0 -0.175  0.45 0.259 0.525
+	triangle glass 0.0 0.0 -0.175  0.45 0.7794 -0.175  0.45 0.259 0.525
+	triangle glass 0.0 0.0 -0.175  0.45 0.7794 -0.175  0.9 0.0 -0.175
+	triangle glass 0.45 0.7794 -0.175  0.9 0.0 -0.175  0.45 0.259 0.525
+
+
+	cylinder black 0.002   0.0 0.0 -0.175  0.9 0.0 -0.175
+	cylinder black 0.002   0.9 0.0 -0.175  0.45 0.259 0.525
+	cylinder black 0.002   0.0 0.0 -0.175  0.45 0.7794 -0.175
+	cylinder black 0.002   0.45 0.7794 -0.175  0.45 0.259 0.525
+	cylinder black 0.002   0.45 0.7794 -0.175  0.9 0.0 -0.175
+	cylinder black 0.002   0.45 0.259 0.525 0.0 0.0 -0.175
+	
+
+end
+
+name Ga_atoms
+list
+	sphere orangemirror  0.08   0.0  0.0   0.7
+	object Ga1 rotate 0.0 0.0 1.0 60
+	object Ga1 rotate 0.0 0.0 1.0 120
+        object Ga1
+
+	sphere orangemirror  0.08   0.0  0.0   -0.7
+
+        object Ga2 
+	object Ga2 rotate 0.0 0.0 1.0 60
+	object Ga2 rotate 0.0 0.0 1.0 120
+
+
+	object Ga3
+
+
+	object unitcell
+
+
+
+end
+
+
+name N_atoms
+list
+	sphere blutintmirror  0.06   0.0  0.0   -0.175
+	cylinder mirror 0.02   0.0  0.0  -0.7   0.0  0.0   -0.175
+	
+	object N1_wlines
+
+	object N2_wlines
+	object N1_wlines rotate 0.0 0.0 1.0 60
+	object N1_wlines rotate 0.0 0.0 1.0 120
+
+end
+
+name cell
+list
+	object Ga_atoms
+	object N_atoms
+end
+
+plane white 0 0 -10 0 0 1
+
+
+object cell rotate 0. 0. 1. 2
+
+
+
+screen 1280 980
+maxdepth 30 
+eyep 2.2 3. 2.
+lookp 0 0 .01
+up 0 0 1
+fov 50
+sample 8
+
+light 1.4 point -6 3 6
+light 0.5 extended 2.0 6  -4 1
+background 1. 1. 0.75
+

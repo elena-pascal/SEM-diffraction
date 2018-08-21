@@ -5,6 +5,13 @@
    Date:   10/26/1998
 */
 
+/*
+   modified 6mm point group (pg_6mm.ray) into 6_3mc
+   Author: E. Pascal
+   Date:   05/2018	
+
+*/
+
 surface mirror        /* mirrored (silver) surface */
         ambient 0.14 0.14 0.14
         diffuse 0.01 0.01 0.01
