@@ -1,0 +1,56 @@
+# Electron energy in keV.
+V : 20
+# Maximum thickness sampled for the solution in units of extinction distance Xi_g.
+zmax : 0.5
+
+# Material parameters.
+Xi_0'/Xi_g' : 0.165
+Xi_g/Xi_g' : 0.163
+
+# Deviation from Bragg's condition in units of Xi_g.
+# Choose from single value and range
+# w = 0.5
+w1 : -4.
+w2 : 4.
+
+# Crystallographic parameters in nm.
+a : 0.319
+c : 0.519
+
+# Measurement geometry.
+# Sample tilt around [100] from horizontal in degrees.
+#tiltS : -49.6
+tiltS : -70.
+
+# Detector tilt from vertical in degrees.
+tiltD : 20.
+
+# Crystallographic orientation.
+g : 7., 5., -3.
+# g: 2., 1., 0.
+
+# Crystal rotation in degrees.
+rot_c : 58.35
+
+# Elastic constant nu.
+nu : 0.3
+
+# Dislocation's Burgers vector.
+# Absolute value
+# be = a, bs = c
+# be : 0.319
+bs : 0.519
+# Screw type or Edge type or both or none for perfect crystal
+type : none
+# For an edge dislocation the rotation in degrees of the Burgers vector from bring aligned with crystals x axis.
+rot_b : 60.
+
+# Integration grid in nm.
+x_size : 600
+y_size : 600
+# Number of steps.
+nx : 100
+ny : 100
+# Depth step size in units of extinction distance Xi_g.
+dstep : 0.03
+#0.05 magic value
