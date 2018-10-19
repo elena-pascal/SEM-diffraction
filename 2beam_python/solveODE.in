@@ -4,7 +4,7 @@ V : 20
 zmax : 0.5
 
 # Material parameters.
-Xi_0'/Xi_g' : 0.165
+Xi_0/Xi_g' : 0.165
 Xi_g/Xi_g' : 0.163
 
 # Deviation from Bragg's condition in units of Xi_g.
@@ -41,7 +41,7 @@ nu : 0.3
 # be : 0.319
 bs : 0.519
 # Screw type or Edge type or both or none for perfect crystal
-type : none
+type : Screw
 # For an edge dislocation the rotation in degrees of the Burgers vector from bring aligned with crystals x axis.
 rot_b : 60.
 

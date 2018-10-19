@@ -206,20 +206,7 @@ class EdgeBeta(object):
         Return result in displacement frame
         '''
 
-        #udotg = self.u_DF().dot(self.gcubic_DF())
 
-        #b_curv = ( diff(udotg, self.DF[0]) * (self.rinc_DF().dot(self.DF.x)) ) + \
-        #         ( diff(udotg, self.DF[1]) * (self.rinc_DF().dot(self.DF.y)) ) + \
-        #         ( diff(udotg, self.DF[2]) * (self.rinc_DF().dot(self.DF.z)) )
-
-        #rg = self.g_DF().normalize()
-
-        #b_displ = ( diff(udotg, x) * (rg.dot(self.DF.x)) ) + \
-        #          ( diff(udotg, y) * (rg.dot(self.DF.y)) ) + \
-        #          ( diff(udotg, z) * (rg.dot(self.DF.z)) )
-
-        #betaT_DF = b_curv + (self.thetaB * b_displ)
-        #return express(betaT_DF, self.SF, variables = True)
 
         udotg = self.u_DF().dot(self.gcubic_DF())
 
@@ -235,6 +222,7 @@ class EdgeBeta(object):
 
         betaT_DF = b_curv + self.thetaB * b_displ
 
+        #return express(betaT_DF, self.SF, variables = True)
         return betaT_DF
 
     def Beta_cubic_DF_n(self, xN, yN, zN):
@@ -266,7 +254,6 @@ class EdgeBeta(object):
     ################ hexagonal crystal ######################################
     # g in dislocation frame -----------
     def ghex_DF(self):
-        #gDF = TM_ds * b_hex(self.a, self.c) * self.g
         gC = b_hex(self.a, self.c) * self.g # g in real space Cartesian coordinates
         gCF = gC[0]* self.CF.x + gC[1]*self.CF.y + gC[2]*self.CF.z # vector explicitely defined
         gDF = express(gCF, self.DF)

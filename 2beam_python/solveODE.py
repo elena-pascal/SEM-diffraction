@@ -1,10 +1,13 @@
 # Solve coupled complex ODEs using the odeintw wrapper developed by Warren Weckesser
 # for the scipy odeint module which handles complex formats.
 # Copyright (c) 2014, Warren Weckesser
+import numpy as np
+import sympy as sp
 
 from fileTools import readInput, writeOutput
 from dynTools import thetaB, integrateOnGrid, getBackground
 from strainTools import defineBetaScrew, defineBetaEdge
+from twoBeamODE import zfunc, zjac
 
 #--------------------------- Main starts here --------------------------------
 if __name__ == "__main__":
@@ -22,10 +25,11 @@ if __name__ == "__main__":
         my_beta = defineBetaEdge(indata['a'], indata['c'], indata['be'],\
                          indata['rot_b'], indata['nu'], thetaB, indata['V'],\
                          indata['g'], indata['tiltS'], indata['rot_c'])
+    else:
+        my_beta = 0. # perfect crystal
 
     w = np.around(np.linspace(indata['w1'], indata['w2'], 100), decimals=2)
 
-    # rocking curves
     bright = np.zeros(len(w))
     dark = np.zeros(len(w))
     for index, wi in enumerate(w):
@@ -36,13 +40,13 @@ if __name__ == "__main__":
 
         #start_time = time.time()
         # Integrate on a given grid size.
-        #intensityData = integrateOnGrid(indata['x_size'], indata['nx'], \
-        #                          indata['y_size'], indata['ny'],\
-        #                          indata['tiltS'], \
-        #                          indata['zmax'], indata['dstep'], \
-        #                          zfunc, zjac, initCond, \
-        #                          indata["Xi_0/Xi_g'"], indata["Xi_g/Xi_g'"], \
-        #                          wi, my_beta)
+        intensityData = integrateOnGrid(indata['x_size'], indata['nx'], \
+                                  indata['y_size'], indata['ny'],\
+                                  indata['tiltS'], \
+                                  indata['zmax'], indata['dstep'], \
+                                  zfunc, zjac, initCond, \
+                                  indata["Xi_0/Xi_g'"], indata["Xi_g/Xi_g'"], # this fails some times and I don't know why
+                                  wi, my_beta)
         #end_time = time.time()
 
         #print integrateOnGrid.func_name, ' took', end_time - start_time, 'seconds'

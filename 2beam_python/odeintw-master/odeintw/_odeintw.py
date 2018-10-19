@@ -4,7 +4,7 @@
 
 import numpy as np
 from scipy.integrate import odeint
-from numpy import pi
+
 
 # Tuple holding the major and minor versions of numpy.
 _NUMPY_VERSION = tuple(int(d) for d in np.__version__.split('.')[:2])
@@ -74,7 +74,7 @@ def _transform_banded_jac(bjac):
     newjac[:-1, 1::2] = bjac[:, 1::2]
     return newjac
 
-#@profile
+
 def odeintw(func, y0, t, **kwargs):
     """
     An odeint-like function for complex array-valued differential equations.
