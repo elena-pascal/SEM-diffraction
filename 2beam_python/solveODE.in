@@ -9,9 +9,9 @@ Xi_g/Xi_g' : 0.163
 
 # Deviation from Bragg's condition in units of Xi_g.
 # Choose from single value and range
-# w = 0.5
-w1 : -4.
-w2 : 4.
+w : 0.5
+#w1 : -4.
+#w2 : 4.
 
 # Crystallographic parameters in nm.
 a : 0.319

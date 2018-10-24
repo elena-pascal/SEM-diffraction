@@ -128,7 +128,7 @@ def getBackground(tiltS, maxZ, dZ, func, jacob, initCond, frac0, fracg, w):
         depth += dZ
 
 
-    print "Background is at",  SumI0_backgr, SumIg_backgr
+    print "Background is",  SumI0_backgr, " in bright field and ", SumIg_backgr, " in dark field "
     #return [SumI0_backgr, SumIg_backgr, Depth]
     return [absI0_backgr.sum(), absIg_backgr.sum()]
 

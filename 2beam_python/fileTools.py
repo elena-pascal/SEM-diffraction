@@ -1,4 +1,6 @@
+from math import copysign
 
+my_file = "solveODE.in"
 
 def readInput(fileName):
     '''
@@ -32,7 +34,9 @@ def readInput(fileName):
     return data
 
 def fileName(intData, folder):
-
+    # Read parameters from file.
+    indata = readInput(my_file)
+    wi = indata['w']
     parameters = indata['type'] + '-' + str(int(indata['tiltS'])) + '_' + \
                     str(abs(indata['tiltS'] - int(indata['tiltS'])))[2:] + 'tilt' +  \
                     '-' + str(copysign(int(wi),wi))[0:2] + \
@@ -46,8 +50,18 @@ def fileName(intData, folder):
     return [bright_field, dark_field, contrast_file, depth_file]
 
 
+def writeOutput(contrast, fileNameC):
+    '''
+    Write the contrast data to file
+    '''
+    with open(fileNameC, 'w+') as file:
+        for row in contrast:
+            for item in row:
+                file.write('%s\n' % item)
 
-def writeOutput(contrast, fileNameC, depth, fileNameD):
+
+
+def writeOutputplusDepth(contrast, fileNameC, depth, fileNameD):
     '''
     Write the contrast and depth map data to separate files
     '''
