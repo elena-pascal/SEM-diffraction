@@ -36,8 +36,18 @@ if __name__ == "__main__":
     print '----------------------'
     print 'starting integration on grid'
 
+    # define number of steps for z backscatter infor
+    nr_zsteps = 10.
+    # define z step size
+    zstep =  indata['zmax']/nr_zsteps
+
+    # for every z step integrate on grid
+
     #start_time = time.time()
+
     # Integrate on a given grid size.
+
+
     intensityData = integrateOnGrid(indata['x_size'], indata['nx'], \
                               indata['y_size'], indata['ny'],\
                               indata['tiltS'], \
@@ -57,13 +67,13 @@ if __name__ == "__main__":
     bright = backgr[0]
     dark = backgr[1]
 
+    # total probability distribuiton defined as the quare of the wavefunction
+    # is the sum of both incident squared wavefunction and diffracted squared wavefunction
+    totalI = intensityData[0] + intensityData[1]
 
-    # Definition of contrast
-    contrast = (intensityData[0] - backgr[0]) + (intensityData[1] - backgr[1])
+    integratedI_file = fileName(integratedI, "full I")[2]
 
-    contrast_file = fileName(contrast, "test")[2]
+    writeOutput(totalI, integratedI_file)
 
-    writeOutput(contrast, contrast_file)
-
-    print "contrast intensity written to", contrast_file
+    print "integrated intensity written to", integratedI_file
     print

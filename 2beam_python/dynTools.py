@@ -20,10 +20,12 @@ def integrateOnGrid(x, nx, y, ny, tiltS, maxZ, dZ, func, jacob, initCond, frac0,
     # tilt correction
     yM = np.linspace(-y*0.5/np.cos(np.radians(tiltS)), y*0.5/np.cos(np.radians(tiltS)), int(ny))
 
+    # number of z steps
+    nz = maxZ/dz
 
-    SumIg = np.zeros((int(nx), int(ny)))
-    SumI0 = np.zeros((int(nx), int(ny)))
-    Depth = np.zeros((int(nx), int(ny)))
+    SumIg = np.zeros((int(nx), int(ny), int(nz)))
+    SumI0 = np.zeros((int(nx), int(ny), int(nz)))
+#    Depth = np.zeros((int(nx), int(ny)))
 
     for xidx, xgrid in np.ndenumerate(xM): # scan across x
         print "x at", xgrid
@@ -53,8 +55,8 @@ def integrateOnGrid(x, nx, y, ny, tiltS, maxZ, dZ, func, jacob, initCond, frac0,
                 absIg =  abs(phi[:,1])
 
                 # Add intensity to beam sums.
-                SumI0[xidx, yidx] += (absI0*absI0).sum()
-                SumIg[xidx, yidx] += (absIg*absIg).sum()
+                SumI0[xidx, yidx, depth] += (absI0*absI0).sum()
+                SumIg[xidx, yidx, depth] += (absIg*absIg).sum()
 
                 #totalI = abs(endPhi[0])*abs(endPhi[0]) + abs(endPhi[1])*abs(endPhi[1])
                 totalI = absI0[100]*absI0[100] + absIg[100]*absIg[100]
@@ -67,14 +69,14 @@ def integrateOnGrid(x, nx, y, ny, tiltS, maxZ, dZ, func, jacob, initCond, frac0,
                     reachedMaxDepth = True
 
                     # Save final, tilt-corrected, depth values.
-                    Depth[xidx, yidx] = (depth + tiltCorrect) * np.sin(-np.radians(tiltS))
+                    # Depth[xidx, yidx] = (depth + tiltCorrect) * np.sin(-np.radians(tiltS))
 
                 # Reinitialise the initial condition with calulated one
                 phi0 = np.array([phi[100,0], phi[100,1]])
 
                 # Move one step lower
                 depth += dZ
-    return [SumI0, SumIg, Depth]
+    return [SumI0, SumIg]
 
 
 

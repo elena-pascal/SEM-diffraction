@@ -73,16 +73,30 @@ d = ((g_Matrix.T * gR_hex(a, c) * g_Matrix)**0.5)[0,0]
 thetaB_GaN = 0.007/(2*d)
 print "thetaB", thetaB_GaN
 
-######## Edge Burgers vectors ########################################
+elif indata['type'] == 'Edge':
+    my_beta = defineBetaEdge(indata['a'], indata['c'], indata['be'],\
+                     indata['rot_b'], indata['nu'], thetaB, indata['V'],\
+                     indata['g'], indata['tiltS'], indata['rot_c'])
+else:
+    my_beta = 0. # perfect crystal
 
-be = a
 
-# dictionary containing Burgers vectors possible rotation angles in degrees
-#be_vectors = {}
-#for i in range(1, 7):
-#    be_vectors['rot_b%01d'%i] = (i-1) * 60 # in degrees
+if indata['type'] == 'Screw':
 
-# rotation for edge dislocaiton Burgers vector
+
+
+
+
+    #### Edge Burgers vectors ########################################
+
+    be = a
+
+    # dictionary containing Burgers vectors possible rotation angles in degrees
+    #be_vectors = {}
+    #for i in range(1, 7):
+    #    be_vectors['rot_b%01d'%i] = (i-1) * 60 # in degrees
+
+    # rotation for edge dislocaiton Burgers vector
 #rot_b1 = 0    # [100] in Cartesian coordinates
 #rot_b2 = 60   # [1-10]
 #rot_b3 = 120  # [0-10]
@@ -111,18 +125,6 @@ print "Mapped edge TD strain..."
 
 bE_inSF = betaEdge_hex.b_SF()
 
-######### Screw Burgers vectors'  #############################################
-bs = -c
-
-# here the strain field is defined
-# a, c, b, thetaB, g, tiltS, rot_c, LF
-betaScrew_hex = ScrewBeta(a, c, bs, thetaB_GaN, g, tiltS, rot_c, LF_S)
-
-
-print
-print "Mapped screw TD strain..."
-valS = betaScrew_hex.Beta_hex_SF_n(xM, yM, zM)
-#print valS
 
 ######### Mixed Burgers vectors ##############################################
 bm = (a*a + c*c)**0.5
