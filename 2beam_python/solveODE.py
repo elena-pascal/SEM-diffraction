@@ -36,14 +36,6 @@ if __name__ == "__main__":
     print '----------------------'
     print 'starting integration on grid'
 
-    # define number of steps for z backscatter infor
-    nr_zsteps = 10.
-    # define z step size
-    zstep =  indata['zmax']/nr_zsteps
-
-    # for every z step integrate on grid
-
-    #start_time = time.time()
 
     # Integrate on a given grid size.
 
@@ -55,17 +47,16 @@ if __name__ == "__main__":
                               zfunc, zjac, initCond, \
                               indata["Xi_0/Xi_g'"], indata["Xi_g/Xi_g'"], \
                               indata["w"], my_beta)
-    #end_time = time.time()
-    #print integrateOnGrid.func_name, ' took', end_time - start_time, 'seconds'
 
+    # background intensity beams from a perfect crystal                          
     backgr = getBackground(indata['tiltS'], \
                       indata['zmax'], indata['dstep'], \
                       zfunc, zjac, initCond, \
                       indata["Xi_0/Xi_g'"], indata["Xi_g/Xi_g'"], \
                       indata["w"])
 
-    bright = backgr[0]
-    dark = backgr[1]
+    perfect_bright = backgr[0]
+    perfect_dark = backgr[1]
 
     # total probability distribuiton defined as the quare of the wavefunction
     # is the sum of both incident squared wavefunction and diffracted squared wavefunction

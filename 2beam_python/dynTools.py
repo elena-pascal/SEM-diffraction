@@ -23,8 +23,8 @@ def integrateOnGrid(x, nx, y, ny, tiltS, maxZ, dZ, func, jacob, initCond, frac0,
     # number of z steps
     nz = maxZ/dz
 
-    SumIg = np.zeros((int(nx), int(ny), int(nz)))
-    SumI0 = np.zeros((int(nx), int(ny), int(nz)))
+    S = np.zeros((int(nx), int(ny), int(nz)))
+    T = np.zeros((int(nx), int(ny), int(nz)))
 #    Depth = np.zeros((int(nx), int(ny)))
 
     for xidx, xgrid in np.ndenumerate(xM): # scan across x
@@ -42,7 +42,7 @@ def integrateOnGrid(x, nx, y, ny, tiltS, maxZ, dZ, func, jacob, initCond, frac0,
                 localBeta = beta(xgrid, ygrid, depth)
                 # From known initial condition at the start of this slice
                 # calculate the beam intensity at the exit of the slice of width dstep
-                t = np.linspace(depth , depth+dZ, 101)
+                t = np.linspace(depth, depth+dZ, 101)
 
                 #starttime = time.time()
                 # Call odeintw.
@@ -51,15 +51,10 @@ def integrateOnGrid(x, nx, y, ny, tiltS, maxZ, dZ, func, jacob, initCond, frac0,
                 #endtime = time.time()
                 #print 'odeintw took', endtime - starttime, 'seconds'
 
-                absI0 =  abs(phi[:,0])
-                absIg =  abs(phi[:,1])
 
-                # Add intensity to beam sums.
-                SumI0[xidx, yidx, depth] += (absI0*absI0).sum()
-                SumIg[xidx, yidx, depth] += (absIg*absIg).sum()
-
-                #totalI = abs(endPhi[0])*abs(endPhi[0]) + abs(endPhi[1])*abs(endPhi[1])
-                totalI = absI0[100]*absI0[100] + absIg[100]*absIg[100]
+                # Add T and S complex values to the 3D arrays .
+                T[xidx, yidx, depth] = phi[:,0]
+                S[xidx, yidx, depth] = phi[:,1]
 
 
                 # If more than 99% of initial intensity is lost
@@ -76,7 +71,7 @@ def integrateOnGrid(x, nx, y, ny, tiltS, maxZ, dZ, func, jacob, initCond, frac0,
 
                 # Move one step lower
                 depth += dZ
-    return [SumI0, SumIg]
+    return [T, S]
 
 
 
