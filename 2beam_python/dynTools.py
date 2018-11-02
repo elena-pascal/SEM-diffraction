@@ -9,16 +9,38 @@ import time
 #--------------------------- Functions start here ----------------------------
 
 
+# the total crystal wavefunction is defined as
+# psi(r) = T exp(2 pi i rinc*r) + S exp(2 pi i (rinc+g)*r)
+def total_psi(T, S, x, nx, y, ny, maxZ, dZ, r_inc, g):
+    '''
+    input: T[x, y, z], S[x, y, z] are the beams amplitudes calcualted on a grid
+    where r_inc and g are vectors and will be given as np.matrices
+    '''
+    xM = np.linspace(-x*0.5, x*0.5, int(nx))
+    yM = np.linspace(-y*0.5, y*0.5, int(ny))
+    # number of z steps
+    nz = maxZ/dz
+
+    Psi = np.zeros((int(nx), int(ny), int(nz)))
+
+    for xidx, xgrid in np.ndenumerate(xM): # scan across x
+        print "x at", xgrid
+        for yidx, ygrid in np.ndenumerate(yM): # scan across y
+            for zidx, zgrid in np.ndenumerate(yM): # scan across y
+    return T * np.exp(2.*1j* np.pi * (r_inc*r)) +\
+                S * np.exp(2.*1j* np.pi * ((r_inc+g)*r))
+
 
 #@profile
-def integrateOnGrid(x, nx, y, ny, tiltS, maxZ, dZ, func, jacob, initCond, frac0, fracg, w, beta):
+def integrateOnGrid(x, nx, y, ny, maxZ, dZ, tiltS, func, jacob, initCond, frac0, fracg, w, beta):
     '''
     Integrate a set of complex coupled ODEs on a given grid.
     Returns bright field intensity, dark field intensity and penetration depth pixel binned.
     '''
     xM = np.linspace(-x*0.5, x*0.5, int(nx))
+    yM = np.linspace(-y*0.5, y*0.5, int(ny))
     # tilt correction
-    yM = np.linspace(-y*0.5/np.cos(np.radians(tiltS)), y*0.5/np.cos(np.radians(tiltS)), int(ny))
+    #yM = np.linspace(-y*0.5/np.cos(np.radians(tiltS)), y*0.5/np.cos(np.radians(tiltS)), int(ny))
 
     # number of z steps
     nz = maxZ/dz

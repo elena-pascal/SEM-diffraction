@@ -5,7 +5,7 @@ import numpy as np
 import sympy as sp
 
 from fileTools import readInput, writeOutput, fileName
-from dynTools import thetaB, integrateOnGrid, getBackground
+from dynTools import thetaB, integrateOnGrid, getBackground, total_psi
 from strainTools import defineBetaScrew, defineBetaEdge
 from twoBeamODE import zfunc, zjac
 
@@ -38,9 +38,8 @@ if __name__ == "__main__":
 
 
     # Integrate on a given grid size.
-
-
-    intensityData = integrateOnGrid(indata['x_size'], indata['nx'], \
+    # Return beamsArray[T[xgrid, ygrid, z], S[xgrid, ygrid, z]]
+    beamsArray = integrateOnGrid(indata['x_size'], indata['nx'], \
                               indata['y_size'], indata['ny'],\
                               indata['tiltS'], \
                               indata['zmax'], indata['dstep'], \
@@ -48,7 +47,11 @@ if __name__ == "__main__":
                               indata["Xi_0/Xi_g'"], indata["Xi_g/Xi_g'"], \
                               indata["w"], my_beta)
 
-    # background intensity beams from a perfect crystal                          
+    # total wavefunciton on the 3D grid
+    totalPsi = total_psi()
+
+
+    # background intensity beams from a perfect crystal
     backgr = getBackground(indata['tiltS'], \
                       indata['zmax'], indata['dstep'], \
                       zfunc, zjac, initCond, \
@@ -60,11 +63,11 @@ if __name__ == "__main__":
 
     # total probability distribuiton defined as the quare of the wavefunction
     # is the sum of both incident squared wavefunction and diffracted squared wavefunction
-    totalI = intensityData[0] + intensityData[1]
+    #totalI = intensityData[0] + intensityData[1]
 
-    integratedI_file = fileName(integratedI, "full I")[2]
+    #integratedI_file = fileName(integratedI, "full I")[2]
 
-    writeOutput(totalI, integratedI_file)
+    #writeOutput(totalI, integratedI_file)
 
-    print "integrated intensity written to", integratedI_file
-    print
+    #print "integrated intensity written to", integratedI_file
+    #print
