@@ -146,11 +146,21 @@ class EdgeBeta(object):
     def rinc_DF(self):
         '''
         the incident beam is along the lab cartesian direction (0,0,-1)
-        return in vector form
+        return in vector form in dislocation frame
         '''
         rinc_LF = -1. * self.LF.z
         rinc_DF = express(rinc_LF, self.DF)
         return rinc_DF
+
+
+    def rinc_SF(self):
+        '''
+        the incident beam is along the lab cartesian direction (0,0,-1)
+        return in vector form in sample frame
+        '''
+        rinc_LF = -1. * self.LF.z
+        rinc_SF = express(rinc_LF, self.SF)
+        return rinc_SF
 
     # b in sample frame ----------
     def b_SF(self):
@@ -445,11 +455,22 @@ class ScrewBeta(object):
     def rinc_DF(self):
         '''
         the incident beam is along the lab cartesian direction (0,0,-1)
-        return in vector form
+        return in vector form in dislocation frame
         '''
         rinc_LF = -1. * self.LF.z
         rinc_DF = express(rinc_LF, self.DF)
         return rinc_DF
+
+
+    def rinc_SF(self):
+        '''
+        the incident beam is along the lab cartesian direction (0,0,-1)
+        return in vector form in sample frame
+        '''
+        rinc_LF = -1. * self.LF.z
+        rinc_SF = express(rinc_LF, self.SF)
+        return rinc_SF
+
 
     # g in dislocation frame -----------
     def g_DF(self):

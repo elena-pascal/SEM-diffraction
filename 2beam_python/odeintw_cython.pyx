@@ -1,4 +1,4 @@
-# cython: boundscheck=False
+cython: boundscheck=False
 import numpy as np
 from scipy.integrate import odeint
 

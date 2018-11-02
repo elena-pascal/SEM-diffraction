@@ -1,8 +1,9 @@
 import sympy as sp
 import numpy as np
 
-#from odeintw import odeintw
-import odeintw_cython# import odeintw
+
+from odeintw import odeintw
+#import odeintw_cython # import odeintw
 import time
 
 
@@ -19,16 +20,23 @@ def total_psi(T, S, x, nx, y, ny, maxZ, dZ, r_inc, g):
     xM = np.linspace(-x*0.5, x*0.5, int(nx))
     yM = np.linspace(-y*0.5, y*0.5, int(ny))
     # number of z steps
-    nz = maxZ/dz
+    nz = maxZ/dZ
+    zM = np.linspace(0, -maxZ, int(nz))
 
     Psi = np.zeros((int(nx), int(ny), int(nz)))
 
     for xidx, xgrid in np.ndenumerate(xM): # scan across x
-        print "x at", xgrid
+        print "calculating psi at x ", xgrid
         for yidx, ygrid in np.ndenumerate(yM): # scan across y
-            for zidx, zgrid in np.ndenumerate(yM): # scan across y
-    return T * np.exp(2.*1j* np.pi * (r_inc*r)) +\
-                S * np.exp(2.*1j* np.pi * ((r_inc+g)*r))
+            for zidx, zgrid in np.ndenumerate(zM): # scan along z
+                print 'r_ar', np.array((xgrid, ygrid, zgrid))
+                r_ar = np.array((xgrid, ygrid, zgrid))
+                print r_inc
+                print 'zero', 2.*1j* np.pi * np.dot(r_inc,r_ar) ,  np.exp(2.*1j* np.pi * np.dot(r_inc,r_ar) )
+                Psi[xidx, yidx, zidx] = T[xidx, yidx, zidx] * np.exp(2.*1j* np.pi * np.dot(r_inc,r_ar) ) +\
+                            S[xidx, yidx, zidx] * np.exp(2.*1j* np.pi * np.dot((r_inc + g),r_ar) )
+
+    return Psi
 
 
 #@profile
@@ -43,14 +51,13 @@ def integrateOnGrid(x, nx, y, ny, maxZ, dZ, tiltS, func, jacob, initCond, frac0,
     #yM = np.linspace(-y*0.5/np.cos(np.radians(tiltS)), y*0.5/np.cos(np.radians(tiltS)), int(ny))
 
     # number of z steps
-    nz = maxZ/dz
-
-    S = np.zeros((int(nx), int(ny), int(nz)))
-    T = np.zeros((int(nx), int(ny), int(nz)))
+    nz = maxZ/dZ
+    S = np.zeros((int(nx), int(ny), int(nz)+1), dtype=np.complex)
+    T = np.zeros((int(nx), int(ny), int(nz)+1), dtype=np.complex)
 #    Depth = np.zeros((int(nx), int(ny)))
 
     for xidx, xgrid in np.ndenumerate(xM): # scan across x
-        print "x at", xgrid
+        print "x at", xgrid, "nm"
         for yidx, ygrid in np.ndenumerate(yM): # scan across y
             # 2 beam initial conditions.
             phi0 = initCond
@@ -59,6 +66,7 @@ def integrateOnGrid(x, nx, y, ny, maxZ, dZ, tiltS, func, jacob, initCond, frac0,
             tiltCorrect = ygrid * np.tan(np.radians(tiltS))
             depth = 0. - tiltCorrect
 
+            zidx = 0
             while (not reachedMaxDepth) and (depth < (maxZ - tiltCorrect)): # integrate intensity along a column
                 # Calculate beta component at this position and depth.
                 localBeta = beta(xgrid, ygrid, depth)
@@ -68,17 +76,17 @@ def integrateOnGrid(x, nx, y, ny, maxZ, dZ, tiltS, func, jacob, initCond, frac0,
 
                 #starttime = time.time()
                 # Call odeintw.
-                phi, infodict = odeintw_cython.odeintw(func, phi0, t, args=(frac0, fracg, w, localBeta),
+                # phi contains 100 values for every t
+                phi, infodict = odeintw(func, phi0, t, args=(frac0, fracg, w, localBeta),
                                 Dfun=jacob, full_output=True)
                 #endtime = time.time()
                 #print 'odeintw took', endtime - starttime, 'seconds'
 
-
                 # Add T and S complex values to the 3D arrays .
-                T[xidx, yidx, depth] = phi[:,0]
-                S[xidx, yidx, depth] = phi[:,1]
+                T[xidx, yidx, zidx] = phi[100,0]
+                S[xidx, yidx, zidx] = phi[100,1]
 
-
+                totalI = abs(phi[100,0])**2 + abs(phi[100,1])**2
                 # If more than 99% of initial intensity is lost
                 # consider it reached max penetration depth
                 if totalI < 0.01:
@@ -93,6 +101,7 @@ def integrateOnGrid(x, nx, y, ny, maxZ, dZ, tiltS, func, jacob, initCond, frac0,
 
                 # Move one step lower
                 depth += dZ
+                zidx += 1
     return [T, S]
 
 

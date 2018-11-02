@@ -4,10 +4,12 @@
 import numpy as np
 import sympy as sp
 
+from sympy.physics.vector import ReferenceFrame, express
 from fileTools import readInput, writeOutput, fileName
 from dynTools import thetaB, integrateOnGrid, getBackground, total_psi
 from strainTools import defineBetaScrew, defineBetaEdge
 from twoBeamODE import zfunc, zjac
+from coordinates import sampleFrame
 
 #--------------------------- Main starts here --------------------------------
 if __name__ == "__main__":
@@ -16,15 +18,16 @@ if __name__ == "__main__":
     indata = readInput(my_file)
 
     # Define static beta function.
-    thetaB_val =  thetaB(indata['g'], indata['a'], indata['c'], indata['V'])
-    print 'Bragg angle for this g is: ', thetaB_val, 'radians'
     if indata['type'] == 'Screw':
-        my_beta = defineBetaScrew(indata['a'], indata['c'], indata['bs'],\
+        my_beta_num = defineBetaScrew(indata['a'], indata['c'], indata['bs'],\
                          indata['g'], thetaB, indata['V'], indata['tiltS'], indata['rot_c'])
+
+
     elif indata['type'] == 'Edge':
-        my_beta = defineBetaEdge(indata['a'], indata['c'], indata['be'],\
+        my_beta_num = defineBetaEdge(indata['a'], indata['c'], indata['be'],\
                          indata['rot_b'], indata['nu'], thetaB, indata['V'],\
                          indata['g'], indata['tiltS'], indata['rot_c'])
+
     else:
         my_beta = 0. # perfect crystal
 
@@ -35,20 +38,45 @@ if __name__ == "__main__":
     initCond = np.array([1. + 0.j, 0.+ 0.j])
     print '----------------------'
     print 'starting integration on grid'
+    print
 
 
     # Integrate on a given grid size.
     # Return beamsArray[T[xgrid, ygrid, z], S[xgrid, ygrid, z]]
+    # integrateOnGrid(x, nx, y, ny, maxZ, dZ, tiltS, func, jacob, initCond, frac0, fracg, w, beta)
     beamsArray = integrateOnGrid(indata['x_size'], indata['nx'], \
                               indata['y_size'], indata['ny'],\
-                              indata['tiltS'], \
                               indata['zmax'], indata['dstep'], \
+                              indata['tiltS'], \
                               zfunc, zjac, initCond, \
                               indata["Xi_0/Xi_g'"], indata["Xi_g/Xi_g'"], \
-                              indata["w"], my_beta)
+                              indata["w"], my_beta_num)
 
+    # express incident beam direction in sample frame
+    LF = ReferenceFrame('LF')
+    rinc_LF = -1. * LF.z
+    SF = sampleFrame(indata['tiltS'], LF)
+    rinc_SF = express(rinc_LF, SF)
+    rinc_SF_M = np.array((rinc_SF.dot(SF.x), rinc_SF.dot(SF.y), rinc_SF.dot(SF.z)))
+
+    g = indata['g']
+    g_M = np.array((g[0], g[1], g[2]))
     # total wavefunciton on the 3D grid
-    totalPsi = total_psi()
+
+
+    totalPsi = total_psi(beamsArray[0], beamsArray[1],   \
+                        indata['x_size'], indata['nx'],  \
+                        indata['y_size'], indata['ny'],  \
+                        indata['zmax'], indata['dstep'], \
+                        rinc_SF_M, g_M)
+
+    # write to file totalPsi[x=0, :, :]
+    RealPsiFile = fileName(x0Real, "x0_sliceOfPsi")[2]
+
+    writeOutput(totalPsi[0, :, :], RealPsiFile)
+
+    print "real psi values at slice x=0 written to", RealPsiFile
+
 
 
     # background intensity beams from a perfect crystal
