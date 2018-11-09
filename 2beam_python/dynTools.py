@@ -1,4 +1,3 @@
-import sympy as sp
 import numpy as np
 
 
@@ -29,12 +28,10 @@ def total_psi(T, S, x, nx, y, ny, maxZ, dZ, r_inc, g):
         print "calculating psi at x ", xgrid
         for yidx, ygrid in np.ndenumerate(yM): # scan across y
             for zidx, zgrid in np.ndenumerate(zM): # scan along z
-                print 'r_ar', np.array((xgrid, ygrid, zgrid))
                 r_ar = np.array((xgrid, ygrid, zgrid))
-                print r_inc
-                print 'zero', 2.*1j* np.pi * np.dot(r_inc,r_ar) ,  np.exp(2.*1j* np.pi * np.dot(r_inc,r_ar) )
-                Psi[xidx, yidx, zidx] = T[xidx, yidx, zidx] * np.exp(2.*1j* np.pi * np.dot(r_inc,r_ar) ) +\
-                            S[xidx, yidx, zidx] * np.exp(2.*1j* np.pi * np.dot((r_inc + g),r_ar) )
+
+                Psi[xidx, yidx, zidx] = T[xidx, yidx, zidx] * np.exp(2.*1j* np.pi * float(np.dot(r_inc,r_ar)) ) +\
+                            S[xidx, yidx, zidx] * np.exp(2.*1j* np.pi * float(np.dot((r_inc + g),r_ar)) )
 
     return Psi
 
@@ -164,6 +161,7 @@ def getBackground(tiltS, maxZ, dZ, func, jacob, initCond, frac0, fracg, w):
 
 def thetaB(g, a, c, V):
     from crystalography import gR_hex
+    import sympy as sp
     g_Matrix =  sp.Matrix([g[0], g[1], g[2]])
     d = ((g_Matrix.T * gR_hex(a, c) * g_Matrix)**0.5)[0,0]
     #constants here

@@ -7,7 +7,7 @@ import sympy as sp
 from sympy.physics.vector import ReferenceFrame, express
 from fileTools import readInput, writeOutput, fileName
 from dynTools import thetaB, integrateOnGrid, getBackground, total_psi
-from strainTools import defineBetaScrew, defineBetaEdge
+from strainTools import defineBetaScrew, defineBetaEdge, defineBetaZero
 from twoBeamODE import zfunc, zjac
 from coordinates import sampleFrame
 
@@ -29,7 +29,7 @@ if __name__ == "__main__":
                          indata['g'], indata['tiltS'], indata['rot_c'])
 
     else:
-        my_beta = 0. # perfect crystal
+        my_beta_num = defineBetaZero() # perfect crystal
 
 
 
@@ -70,12 +70,16 @@ if __name__ == "__main__":
                         indata['zmax'], indata['dstep'], \
                         rinc_SF_M, g_M)
 
-    # write to file totalPsi[x=0, :, :]
-    RealPsiFile = fileName(x0Real, "x0_sliceOfPsi")[2]
+    # write to file totalPsi[x=0, :, :], ie x slice
 
-    writeOutput(totalPsi[0, :, :], RealPsiFile)
+    print totalPsi[0, :, :]
 
-    print "real psi values at slice x=0 written to", RealPsiFile
+    realPsi = totalPsi.real
+    intensityPsi = abs(totalPsi**2)
+    writeOutput(realPsi[0, :, :], 'realPsiScrew.out')
+    writeOutput(intensityPsi[0, :, :], 'intensityPsiScrew.out')
+
+    print "real psi values at slice x=0 written to", 'realPsi.out'
 
 
 

@@ -41,3 +41,18 @@ def defineBetaEdge(a, c, b, irot_b, nu, g, thetaB_fun, V, tiltS, rot_c):
     z = sp.Symbol('z')
 
     return lambdify((x, y, z), Beta_val, "numpy")
+
+
+
+def defineBetaZero():
+    '''
+    Return a numerical beta function dependent on x, y, z
+    '''
+
+    x = sp.Symbol('x')
+    y = sp.Symbol('y')
+    z = sp.Symbol('z')
+
+    betaPerfect = 0*x + 0*y + 0*z
+
+    return lambdify((x, y, z), betaPerfect, "numpy")
